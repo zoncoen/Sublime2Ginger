@@ -13,9 +13,9 @@ $ git clone https://github.com/SublimeLinter/SublimeLinter.git
 
 The "Packages" directory is located at:
 
-- **OSX:** ~/Library/Application Support/Sublime Text 2/Packages/
-- **Linux:** ~/.config/sublime-text-2/Packages/
-- **Windows:** %APPDATA%/Sublime Text 2/Packages/
+- **OSX:** ```~/Library/Application Support/Sublime Text 2/Packages/```
+- **Linux:** ```~/.config/sublime-text-2/Packages/```
+- **Windows:** ```%APPDATA%/Sublime Text 2/Packages/```
 
 
 Reference
