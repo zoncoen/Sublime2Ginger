@@ -1,7 +1,7 @@
 Sublime2Ginger
 ==========
 Simple English grammar checker plugin for [Sublime Text 2](http://www.sublimetext.com/2).
-This grammar checker will fix grammar mistakes using ***unofficial*** Ginger API.
+This grammar checker will fix grammar mistakes using ***unofficial*** [Ginger](http://www.getginger.jp/) API.
 
 Installing
 ----------
