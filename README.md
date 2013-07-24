@@ -22,7 +22,7 @@ Usage
 You can control Sublime2Ginger via the Command Palette (`Command+Shift+P` on OS X, `Control+Shift+P` on Linux/Windows).
 The available commands are:
 
-- **Sublime2Ginger: Grammar Check** - Grammar check on the cursor line in English.
+- **Sublime2Ginger: Grammar Check** - Find spelling errors and grammatical mistakes in English on the cursor line.
 
 Reference
 ----------
