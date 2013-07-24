@@ -13,12 +13,27 @@ import urlparse
 from urllib2 import HTTPError
 from urllib2 import URLError
 import json
-# import threading
+import threading
 
 
 class GingerGrammarCheker:
+    thread = None
+
+    def __call__(self, command, edit, original_text):
+        """
+        """
+        sublime.set_timeout(lambda: sublime.status_message("Ginger Grammar Checker is running..."), 100)
+        # Grammar check with Ginger
+        result, flag = self.parse_result(original_text)
+        if flag:
+            output = "Original: " + original_text + "\n" + "Fixed    : " + result
+            sublime.set_timeout(lambda: self.show_result(command.view.window(), output), 100)
+        else:
+            print result
+            sublime.set_timeout(lambda: self.show_result(command.view.window(), result), 100)
+
     def get_url(self, text):
-        """Get URL for checking grammar using Ginger.
+        """Get a Ginger URL for checking grammar.
         @param text English text
         @return URL
         """
@@ -40,7 +55,7 @@ class GingerGrammarCheker:
     def get_result(self, text):
         """Get a result of checking grammar.
         @param text English text
-        @return result of grammar check by Ginger
+        @return result of grammar check by Ginger as JSON
         """
         url = self.get_url(text)
 
@@ -60,8 +75,12 @@ class GingerGrammarCheker:
 
         return(result)
 
-    def grammer_check(self, original_text):
-        """Grammar check by Ginger."""
+    def parse_result(self, original_text):
+        """Grammar check by Ginger.
+        @param text Original English text
+        @return result of grammar check by Ginger
+        @return status 1(Success)/0(Failure)
+        """
         if len(original_text) > 600:
             sublime.status_message("You can't check more than 600 characters at a time.")
             return("", 0)
@@ -76,7 +95,7 @@ class GingerGrammarCheker:
             return("URL Error: " + e.reason, 0)
         except IOError, (errno, strerror):
             return("I/O error (%s): %s (You need to connect to the Internet)." % (errno, strerror), 0)
-        except ValueError, (errno, strerror):
+        except ValueError:
             return("Value Error: Invalid server response (not including result of grammar check).", 0)
 
         # Correct grammar
@@ -92,44 +111,41 @@ class GingerGrammarCheker:
                 suggest = result["Suggestions"][0]["Text"]
 
                 original_text = original_text[:from_index] + original_text[from_index:to_index] + original_text[to_index:]
-                fixed_text = fixed_text[:from_index-fixed_gap] + suggest + fixed_text[to_index-fixed_gap:]
+                fixed_text = fixed_text[:from_index - fixed_gap] + suggest + fixed_text[to_index - fixed_gap:]
 
-                fixed_gap += to_index-from_index-len(suggest)
+                fixed_gap += to_index - from_index - len(suggest)
 
         return(fixed_text, 1)
 
+    def show_result(self, window, output):
+        output_view = window.get_output_panel("textarea")
+        window.run_command("show_panel", {"panel": "output.textarea"})
 
-class ShowResultCommand(sublime_plugin.WindowCommand):
-    def run(self, output):
-        self.output_view = self.window.get_output_panel("textarea")
-        self.window.run_command("show_panel", {"panel": "output.textarea"})
+        output_view.set_read_only(False)
+        edit = output_view.begin_edit()
+        output_view.insert(edit, output_view.size(), output)
+        output_view.end_edit(edit)
+        output_view.set_read_only(True)
 
-        self.output_view.set_read_only(False)
-        edit = self.output_view.begin_edit()
-        self.output_view.insert(edit, self.output_view.size(), output)
-        self.output_view.end_edit(edit)
-        self.output_view.set_read_only(True)
+    def grammer_check(self, command, edit):
+        sublime.status_message("start translate...")
+        # Set region
+        for region in command.view.sel():
+            region_of_line = command.view.line(region)
+        # Grammar check with Ginger
+        original_text = command.view.substr(region_of_line).lstrip()
+        if len(original_text) == 0:
+            sublime.status_message("No text.")
+            return
+        if self.thread is not None and self.thread.isAlive() is True:
+            sublime.status_message("Already run grammar check now. Please wait.")
+            return
+        thread = threading.Thread(target=self, args=(command, edit, original_text))
+        thread.setDaemon(True)
+        thread.start()
 
 
 class Sublime2GingerCommand(sublime_plugin.TextCommand):
-    """def __init__(self, sel, string, timeout):
-        self.sel = sel
-        self.original = string
-        self.timeout = timeout
-        self.result = None
-        threading.Thread.__init__(self)"""
-
     def run(self, edit):
-        # Set region
-        for region in self.view.sel():
-            region_of_line = self.view.line(region)
-
-        # Grammar check with Ginger
-        original_text = self.view.substr(region_of_line).lstrip()
-        grammar_checker = GingerGrammarCheker()
-        result, flag = grammar_checker.grammer_check(original_text)
-        if flag:
-            output = "Original: " + original_text + "\n" + "Fixed    : " + result
-            self.view.window().run_command("show_result", {"output": output})
-        else:
-            self.view.window().run_command("show_result", {"output": result})
+        grammer_checker = GingerGrammarCheker()
+        grammer_checker.grammer_check(self, edit)
