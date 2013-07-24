@@ -3,7 +3,7 @@ Sublime2Ginger
 Simple English grammar checker plugin for [Sublime Text 2](http://www.sublimetext.com/2).
 This grammar checker will fix grammar mistakes using ***unofficial*** [Ginger](http://www.getginger.jp/) API.
 
-Installing
+Installation
 ----------
 **With Git:** Clone the repository in your Sublime Text "Packages" directory:
 ```
@@ -17,6 +17,12 @@ The "Packages" directory is located at:
 - **Linux:** ```~/.config/sublime-text-2/Packages/```
 - **Windows:** ```%APPDATA%/Sublime Text 2/Packages/```
 
+Usage
+----------
+You can control Sublime2Ginger via the Command Palette (`Command+Shift+P` on OS X, `Control+Shift+P` on Linux/Windows).
+The available commands are:
+
+- **Sublime2Ginger: Grammar Check** - Grammar check on the cursor line in English.
 
 Reference
 ----------
