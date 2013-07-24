@@ -14,6 +14,11 @@ from urllib2 import HTTPError
 from urllib2 import URLError
 import json
 import threading
+import sys
+
+# For window.get_output_panel()
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 
 class GingerGrammarCheker:
@@ -29,7 +34,6 @@ class GingerGrammarCheker:
             output = "Original: " + original_text + "\n" + "Fixed    : " + result
             sublime.set_timeout(lambda: self.show_result(command.view.window(), output), 100)
         else:
-            print result
             sublime.set_timeout(lambda: self.show_result(command.view.window(), result), 100)
 
     def get_url(self, text):
@@ -108,7 +112,7 @@ class GingerGrammarCheker:
             if(result["Suggestions"]):
                 from_index = result["From"]
                 to_index = result["To"] + 1
-                suggest = result["Suggestions"][0]["Text"]
+                suggest = result["Suggestions"][0]["Text"].encode('utf-8')
 
                 original_text = original_text[:from_index] + original_text[from_index:to_index] + original_text[to_index:]
                 fixed_text = fixed_text[:from_index - fixed_gap] + suggest + fixed_text[to_index - fixed_gap:]
@@ -133,7 +137,7 @@ class GingerGrammarCheker:
         for region in command.view.sel():
             region_of_line = command.view.line(region)
         # Grammar check with Ginger
-        original_text = command.view.substr(region_of_line).lstrip()
+        original_text = command.view.substr(region_of_line).lstrip().encode('utf-8')
         if len(original_text) == 0:
             sublime.status_message("No text.")
             return
