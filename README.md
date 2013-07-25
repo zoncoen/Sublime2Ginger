@@ -9,7 +9,7 @@ Installation
 ```
 $ git clone https://github.com/zoncoen/Sublime2Ginger.git
 ```
-**Without Git:** Download the latest source from [GitHub](https://github.com/kentaTech/Sublime2Ginger) and copy the Sublime2Ginger folder to your Sublime Text "Packages" directory.
+**Without Git:** Download the latest source from [GitHub](https://github.com/zoncoen/Sublime2Ginger) and copy the Sublime2Ginger folder to your Sublime Text "Packages" directory.
 
 The "Packages" directory is located at:
 
