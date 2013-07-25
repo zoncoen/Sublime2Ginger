@@ -26,7 +26,7 @@ The available commands are:
 
 Animated screenshot
 ----------
-![alt text](http://zoncoen.github.io/images/Sublime2Ginger-example.gif)
+![Sublime2Ginger animated screenshot](http://zoncoen.github.io/images/Sublime2Ginger-example.gif)
 
 Reference
 ----------
