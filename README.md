@@ -41,6 +41,8 @@ If you don't want to replace your text automatically, modify the user setting:
 
 Animated screenshot
 ----------
+This is the animated screenshot of Sublime2Ginger.
+
 ![Sublime2Ginger animated screenshot](http://zoncoen.github.io/images/Sublime2Ginger-example.gif)
 
 Reference
