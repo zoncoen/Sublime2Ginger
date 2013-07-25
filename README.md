@@ -43,7 +43,7 @@ Animated screenshot
 ----------
 This is the animated screenshot of Sublime2Ginger.
 
-![Sublime2Ginger animated screenshot](http://zoncoen.github.io/images/Sublime2Ginger-example.gif)
+![Sublime2Ginger animated screenshot](http://zoncoen.github.io/images/Sublime2Ginger-screenshot.gif)
 
 Reference
 ----------
