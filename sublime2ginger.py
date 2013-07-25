@@ -45,7 +45,7 @@ class GingerGrammarCheker:
         # Grammar check with Ginger
         result, status = self.parse_result()
         if status:
-            output = "Original: " + self.original_text + "\n" + "Fixed    : " + result
+            output = self.original_text + " -- Original" + "\n" + result + " -- Fixed"
             sublime.set_timeout(lambda: self.show_result(command.view.window(), output), 100)
             if self.auto_replace:
                 sublime.set_timeout(lambda: self.replace_text(command, result), 100)
