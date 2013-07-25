@@ -1,7 +1,7 @@
 Sublime2Ginger
 ==========
 Simple English grammar checker plugin for [Sublime Text 2](http://www.sublimetext.com/2).
-This grammar checker will fix grammar mistakes using ***unofficial*** [Ginger](http://www.getginger.jp/) API.
+This grammar checker will fix spelling errors and grammatical mistakes using ***unofficial*** [Ginger](http://www.getginger.jp/) API.
 
 Installation
 ----------
@@ -22,7 +22,7 @@ Usage
 You can control Sublime2Ginger via the Command Palette (`Command+Shift+P` on OS X, `Control+Shift+P` on Linux/Windows).
 The available commands are:
 
-- **Sublime2Ginger: Grammar Check** - Find spelling errors and grammatical mistakes in English on the cursor line.
+- **Sublime2Ginger: Grammar Check** - Find spelling errors and grammatical mistakes on the cursor line.
 
 Reference
 ----------
