@@ -7,7 +7,7 @@ Installation
 ----------
 **With Git:** Clone the repository in your Sublime Text "Packages" directory:
 ```
-$ git clone https://github.com/SublimeLinter/SublimeLinter.git
+$ git clone https://github.com/zoncoen/Sublime2Ginger.git
 ```
 **Without Git:** Download the latest source from [GitHub](https://github.com/kentaTech/Sublime2Ginger) and copy the Sublime2Ginger folder to your Sublime Text "Packages" directory.
 
