@@ -24,6 +24,10 @@ The available commands are:
 
 - **Sublime2Ginger: Grammar Check** - Find spelling errors and grammatical mistakes on the cursor line.
 
+Animated screenshot
+----------
+![alt text](http://zoncoen.github.io/images/Sublime2Ginger-example.gif)
+
 Reference
 ----------
 [Ginger API を試してみた - にひりずむ::しんぷる (http://blog.livedoor.jp/xaicron/archives/54466736.html)](http://blog.livedoor.jp/xaicron/archives/54466736.html)
