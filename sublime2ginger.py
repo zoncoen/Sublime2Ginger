@@ -31,9 +31,10 @@ class GingerGrammarCheker:
         """
         # Set original text
         for region in command.view.sel():
-            region_of_line = command.view.line(region)
-        self.original_text = command.view.substr(region_of_line).lstrip().encode('utf-8')
+            self.region_of_line = command.view.line(region)
+        self.original_text = command.view.substr(self.region_of_line).lstrip().encode('utf-8')
         self.sublime_ginger_settings = sublime.load_settings("Sublime2Ginger.sublime-settings")
+        self.auto_replace = self.sublime_ginger_settings.get("auto_replace")
 
     def __call__(self, command, edit):
         """Called when the instance is called as a function.
@@ -42,10 +43,12 @@ class GingerGrammarCheker:
         """
         sublime.set_timeout(lambda: sublime.status_message("Ginger grammar checker is running..."), 100)
         # Grammar check with Ginger
-        result, flag = self.parse_result()
-        if flag:
+        result, status = self.parse_result()
+        if status:
             output = "Original: " + self.original_text + "\n" + "Fixed    : " + result
             sublime.set_timeout(lambda: self.show_result(command.view.window(), output), 100)
+            if self.auto_replace:
+                sublime.set_timeout(lambda: self.replace_text(command, result), 100)
         else:
             sublime.set_timeout(lambda: self.show_result(command.view.window(), result), 100)
 
@@ -54,7 +57,6 @@ class GingerGrammarCheker:
         @return URL
         """
         API_KEY = "6ae0c3a0-afdc-4532-a810-82ded0054236"
-
         scheme = "http"
         netloc = "services.gingersoftware.com"
         path = "/Ginger/correct/json/GingerTheText"
@@ -65,7 +67,6 @@ class GingerGrammarCheker:
             ("apiKey", API_KEY),
             ("text", self.original_text)])
         fragment = ""
-
         return(urlparse.urlunparse((scheme, netloc, path, params, query, fragment)))
 
     def get_result(self):
@@ -73,7 +74,7 @@ class GingerGrammarCheker:
         @return result of grammar check by Ginger as JSON
         """
         url = self.get_url()
-
+        # HTTP request
         try:
             response = urllib.urlopen(url)
         except HTTPError:
@@ -82,12 +83,11 @@ class GingerGrammarCheker:
                 raise
         except IOError:
                 raise
-
+        # Parse HTTP response
         try:
             result = json.loads(response.read().decode('utf-8'))
         except ValueError:
             raise
-
         return(result)
 
     def parse_result(self):
@@ -125,11 +125,8 @@ class GingerGrammarCheker:
                 from_index = result["From"]
                 to_index = result["To"] + 1
                 suggest = result["Suggestions"][0]["Text"].encode('utf-8')
-
                 fixed_text = fixed_text[:from_index - fixed_gap] + suggest + fixed_text[to_index - fixed_gap:]
-
                 fixed_gap += to_index - from_index - len(suggest)
-
         return(fixed_text, 1)
 
     def show_result(self, window, output):
@@ -139,12 +136,17 @@ class GingerGrammarCheker:
         """
         output_view = window.get_output_panel("textarea")
         window.run_command("show_panel", {"panel": "output.textarea"})
-
         output_view.set_read_only(False)
         edit = output_view.begin_edit()
         output_view.insert(edit, output_view.size(), output)
         output_view.end_edit(edit)
         output_view.set_read_only(True)
+
+    def replace_text(self, command, result):
+        # Replace the selection with transformed text
+        edit = command.view.begin_edit()
+        command.view.replace(edit, self.region_of_line, result)
+        command.view.end_edit(edit)
 
 
 class Sublime2GingerCommand(sublime_plugin.TextCommand):
