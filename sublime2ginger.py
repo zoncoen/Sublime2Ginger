@@ -143,7 +143,10 @@ class GingerGrammarCheker:
         output_view.set_read_only(True)
 
     def replace_text(self, command, result):
-        # Replace the selection with transformed text
+        """Replace the selection with suggested text.
+        @param command sublime_plugin.TextCommand
+        @param result Suggensed text.
+        """
         edit = command.view.begin_edit()
         command.view.replace(edit, self.region_of_line, result)
         command.view.end_edit(edit)
