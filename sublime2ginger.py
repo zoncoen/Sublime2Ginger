@@ -24,28 +24,27 @@ class GingerGrammarCheker:
         """Called when the instance is created.
         @param command sublime_plugin.TextCommand
         """
-        # Set original text
-        for region in command.view.sel():
-            self.region_of_line = command.view.line(region)
-        self.original_text = command.view.substr(self.region_of_line).lstrip().encode('utf-8')
+        region = command.view.sel()[0]
+        if region.size() == 0:
+            region = command.view.line(region)
+        self.original_text = command.view.substr(region).lstrip()
         self.sublime_ginger_settings = sublime.load_settings("Sublime2Ginger.sublime-settings")
         self.auto_replace = self.sublime_ginger_settings.get("auto_replace")
 
     def __call__(self, command, edit):
         """Called when the instance is called as a function.
         @param commnd sublime_plugin.TextCommand
-        @param edit sublime.Edit
         """
         sublime.set_timeout(lambda: sublime.status_message("Ginger grammar checker is running..."), 100)
         # Grammar check with Ginger
         result, status = self.parse_result()
         if status:
             output = self.original_text + " -- Original" + "\n" + result + " -- Fixed"
-            sublime.set_timeout(lambda: self.show_result(command.view.window(), output), 100)
+            sublime.set_timeout(lambda: self.show_result(command, output), 100)
             if self.auto_replace:
                 sublime.set_timeout(lambda: self.replace_text(command, result), 100)
         else:
-            sublime.set_timeout(lambda: self.show_result(command.view.window(), result), 100)
+            sublime.set_timeout(lambda: self.show_result(command, result), 100)
 
     def get_url(self):
         """Get a Ginger URL for checking grammar.
