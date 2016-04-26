@@ -119,32 +119,24 @@ class GingerGrammarCheker:
             if(result["Suggestions"]):
                 from_index = result["From"]
                 to_index = result["To"] + 1
-                suggest = result["Suggestions"][0]["Text"].encode('utf-8')
+                suggest = result["Suggestions"][0]["Text"]
                 fixed_text = fixed_text[:from_index - fixed_gap] + suggest + fixed_text[to_index - fixed_gap:]
                 fixed_gap += to_index - from_index - len(suggest)
         return(fixed_text, 1)
 
-    def show_result(self, window, output):
+    def show_result(self, command, text):
         """Output result into output panel.
         @param window sublime_plugin.WindowCommand
         @param output Strings to output.
         """
-        output_view = window.get_output_panel("textarea")
-        window.run_command("show_panel", {"panel": "output.textarea"})
-        output_view.set_read_only(False)
-        edit = output_view.begin_edit()
-        output_view.insert(edit, output_view.size(), output)
-        output_view.end_edit(edit)
-        output_view.set_read_only(True)
+        command.view.run_command("___sublime2_ginger_output", {"text": text})
 
-    def replace_text(self, command, result):
+    def replace_text(self, command, text):
         """Replace the selection with suggested text.
         @param command sublime_plugin.TextCommand
         @param result Suggensed text.
         """
-        edit = command.view.begin_edit()
-        command.view.replace(edit, self.region_of_line, result)
-        command.view.end_edit(edit)
+        command.view.run_command("___sublime2_ginger_replace", {"text": text})
 
 
 class Sublime2GingerCommand(sublime_plugin.TextCommand):
@@ -160,3 +152,25 @@ class Sublime2GingerCommand(sublime_plugin.TextCommand):
         sublime_ginger_thread = threading.Thread(target=grammer_checker, args=(self, edit))
         sublime_ginger_thread.setDaemon(True)
         sublime_ginger_thread.start()
+
+class __Sublime2GingerOutputCommand(sublime_plugin.TextCommand):
+    def run(self, edit, text):
+        """Function to replace text for Sublime2Ginger plugin.
+        @param edit sublime.Edit
+        """
+        window = self.view.window()
+        output_view = window.get_output_panel("textarea")
+        window.run_command("show_panel", {"panel": "output.textarea"})
+        output_view.set_read_only(False)
+        output_view.insert(edit, output_view.size(), text)
+        output_view.set_read_only(True)
+
+class __Sublime2GingerReplaceCommand(sublime_plugin.TextCommand):
+    def run(self, edit, text):
+        """Function to replace text for Sublime2Ginger plugin.
+        @param edit sublime.Edit
+        """
+        region = self.view.sel()[0]
+        if region.size() == 0:
+            region = self.view.line(region)
+        self.view.replace(edit, region, text)
