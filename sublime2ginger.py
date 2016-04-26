@@ -14,6 +14,7 @@ from urllib.error import HTTPError
 from urllib.error import URLError
 import json
 import threading
+import difflib
 
 # Sublime Ginger thread
 sublime_ginger_thread = None
@@ -39,8 +40,8 @@ class GingerGrammarCheker:
         # Grammar check with Ginger
         result, status = self.parse_result()
         if status:
-            output = self.original_text + " -- Original" + "\n" + result + " -- Fixed"
-            sublime.set_timeout(lambda: self.show_result(command, output), 100)
+            diff = difflib.ndiff(self.original_text.split('\n'), result.split('\n'))
+            sublime.set_timeout(lambda: self.show_result(command, '\n'.join(diff)), 100)
             if self.auto_replace:
                 sublime.set_timeout(lambda: self.replace_text(command, result), 100)
         else:
