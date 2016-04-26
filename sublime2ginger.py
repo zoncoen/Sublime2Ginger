@@ -8,16 +8,17 @@ This grammar checker will fix grammar mistakes using Ginger.
 
 import sublime
 import sublime_plugin
-import urllib
-import urlparse
-from urllib2 import HTTPError
-from urllib2 import URLError
+import urllib.request, urllib.parse, urllib.error
+import urllib.parse
+from urllib.error import HTTPError
+from urllib.error import URLError
 import json
 import threading
 import sys
+import imp
 
 # For window.get_output_panel()
-reload(sys)
+imp.reload(sys)
 sys.setdefaultencoding("utf-8")
 
 # Sublime Ginger thread
@@ -61,13 +62,13 @@ class GingerGrammarCheker:
         netloc = "services.gingersoftware.com"
         path = "/Ginger/correct/json/GingerTheText"
         params = ""
-        query = urllib.urlencode([
+        query = urllib.parse.urlencode([
             ("lang", "US"),
             ("clientVersion", "2.0"),
             ("apiKey", API_KEY),
             ("text", self.original_text)])
         fragment = ""
-        return(urlparse.urlunparse((scheme, netloc, path, params, query, fragment)))
+        return(urllib.parse.urlunparse((scheme, netloc, path, params, query, fragment)))
 
     def get_result(self):
         """Get a result of checking grammar.
@@ -76,7 +77,7 @@ class GingerGrammarCheker:
         url = self.get_url()
         # HTTP request
         try:
-            response = urllib.urlopen(url)
+            response = urllib.request.urlopen(url)
         except HTTPError:
                 raise
         except URLError:
@@ -109,7 +110,8 @@ class GingerGrammarCheker:
             return("HTTP Error: " + e.code, 0)
         except URLError as e:
             return("URL Error: " + e.reason, 0)
-        except IOError, (errno, strerror):
+        except IOError as xxx_todo_changeme:
+            (errno, strerror) = xxx_todo_changeme.args
             return("I/O error (%s): %s (You need to connect to the Internet)." % (errno, strerror), 0)
         except ValueError:
             return("Value Error: Invalid server response (not including result of grammar check).", 0)
