@@ -1,15 +1,33 @@
 Sublime2Ginger
 ==========
-Simple English grammar checker plugin for [Sublime Text 2](http://www.sublimetext.com/2).
+Simple English grammar checker plugin for [Sublime Text](https://www.sublimetext.com).
 This grammar checker will fix spelling errors and grammatical mistakes using ***unofficial*** [Ginger](http://www.getginger.jp/) API.
 
 Installation
 ----------
+
+### For Sublime Text 3 User
+
 **With Git:** Clone the repository in your Sublime Text "Packages" directory:
 ```
 $ git clone https://github.com/zoncoen/Sublime2Ginger.git
 ```
 **Without Git:** Download the latest source from [GitHub](https://github.com/zoncoen/Sublime2Ginger) and copy the Sublime2Ginger directory to your Sublime Text "Packages" directory.
+
+The "Packages" directory is located at:
+
+- **OSX:** ```~/Library/Application Support/Sublime Text 3/Packages/```
+- **Linux:** ```~/.config/sublime-text-3/Packages/```
+- **Windows:** ```%APPDATA%/Sublime Text 3/Packages/```
+
+### For Sublime Text 2 User
+
+**With Git:** Clone the repository in your Sublime Text "Packages" directory:
+```
+$ git clone https://github.com/zoncoen/Sublime2Ginger.git
+$ git checkout -b v2.0 refs/tags/v2.0
+```
+**Without Git:** Download the v2.0 source from [GitHub](https://github.com/zoncoen/Sublime2Ginger/releases/tag/v2.0) and copy the Sublime2Ginger directory to your Sublime Text "Packages" directory.
 
 The "Packages" directory is located at:
 
