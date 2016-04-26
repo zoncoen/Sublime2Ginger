@@ -14,12 +14,6 @@ from urllib.error import HTTPError
 from urllib.error import URLError
 import json
 import threading
-import sys
-import imp
-
-# For window.get_output_panel()
-imp.reload(sys)
-sys.setdefaultencoding("utf-8")
 
 # Sublime Ginger thread
 sublime_ginger_thread = None
